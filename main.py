@@ -8,6 +8,7 @@ from threading import Thread
 
 working = True
 
+# Interface do usuário
 def interface():
     janela = CTk()
     janela.title("Automação Netflix")
@@ -47,26 +48,34 @@ def interface():
     
     janela.mainloop()
 
+# Abre o Netflix(Botão)
 def abrir_netflix_sp(a, b, c):
+    # Popen abre o site do netflix no chrome e na proxima linha a função executar_pular() é chamada
     Popen(["start", "chrome", "netflix.com"], shell=True)
     executar_pular(a, b, c)
 
+# Abre a função pular()(Botão)
 def executar_pular(a, b, c):
+    # Thread permite que o programa seja executado em segundo plano, deixando a interface livre para a interação com o usuário.
     Thread(target=pular, args=(a.get(), b.get(), c.get())).start()
 
+# Reinicia o programa(Botão)
 def reiniciar():
     python = sys.executable
     os.execl(python, python, *sys.argv) 
 
+# Sai do Programa(Botão)
 def sair(janela):
     global working
     working = False
     janela.destroy()
     sys.exit()
- 
+
+# Função que executa a tarefa principal: pular os resumos, aberturas e seguir para o próximo episódio automaticamente.
 def pular(pular_resumo_var, pular_abertura_var, pular_episodio_var):
     global working
     while working:
+        # Pular resumo (chamada no checkbox da interface)
         try:
             if pular_resumo_var:
                 pular = pyautogui.locateOnScreen("images/pular.png", confidence=0.7, region=(1404, 688, 600, 800))
@@ -78,6 +87,7 @@ def pular(pular_resumo_var, pular_abertura_var, pular_episodio_var):
                     print("pular")
         except Exception as e:
             print(e, "a")
+        # Pular abertura (chamada no checkbox da interface)    
         try:
             if pular_abertura_var:
                 abertura = pyautogui.locateOnScreen("images/abertura.png", confidence=0.7, region=(1404, 688, 600, 800))
@@ -88,7 +98,8 @@ def pular(pular_resumo_var, pular_abertura_var, pular_episodio_var):
                 else:
                     print("pular")
         except Exception as e:
-            print(e, "b")    
+            print(e, "b")
+        # Pular episódio (chamada no checkbox da interface)        
         try:
             if pular_episodio_var:
                 proximo = pyautogui.locateOnScreen("images/proximo.png", confidence=0.7, region=(1404, 688, 600, 800))    
